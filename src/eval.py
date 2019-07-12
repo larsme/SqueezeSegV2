@@ -24,6 +24,7 @@ FLAGS = tf.app.flags.FLAGS
 
 tf.app.flags.DEFINE_string('dataset', 'KITTI',
                            """Currently support KITTI dataset.""")
+tf.app.flags.DEFINE_string('data_splits_path', '', """Root directory of data""")
 tf.app.flags.DEFINE_string('data_path', '', """Root directory of data""")
 tf.app.flags.DEFINE_string('image_set', 'val',
                            """Can be train, trainval, val, or test""")
@@ -172,7 +173,7 @@ def evaluate():
       mc.BATCH_SIZE = 1 # TODO(bichen): fix this hard-coded batch size.
       model = SqueezeSeg(mc)
 
-    imdb = kitti(FLAGS.image_set, FLAGS.data_path, mc)
+    imdb = kitti(FLAGS.image_set, FLAGS.data_splits_path,FLAGS.data_path, mc)
 
     eval_summary_ops = []
     eval_summary_phs = {}

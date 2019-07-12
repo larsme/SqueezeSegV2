@@ -1,0 +1,26 @@
+source ./venv/bin/activate
+
+deactivate
+
+./scripts/train.sh -gpu 0 -image_set train -log_dir ./log/
+
+
+2019-07-09 23:22:24.179711: step 49990, loss = 0.11, cls_loss = 0.06 (12.9 images/sec; 0.466 sec/batch)
+
+
+
+
+./scripts/eval_once.sh -gpu 0 -image_set val
+
+
+Evaluation summary:
+  Timing:
+    read: 0.036s detect: 0.014s
+  Accuracy:
+    car:
+	Pixel-seg: P: 0.766, R: 0.920, IoU: 0.718
+    pedestrian:
+	Pixel-seg: P: 0.603, R: 0.194, IoU: 0.172
+    cyclist:
+	Pixel-seg: P: 0.232, R: 0.723, IoU: 0.213
+

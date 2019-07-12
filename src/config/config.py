@@ -129,7 +129,7 @@ def base_model_config(dataset='KITTI'):
   # capacity for tf.FIFOQueue
   cfg.QUEUE_CAPACITY = 80
 
-  cfg.NUM_ENQUEUE_THREAD = 8
+  cfg.NUM_ENQUEUE_THREAD = 1
 
   # Squeeze-Excitation parameter
   cfg.REDUCTION = 16

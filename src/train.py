@@ -27,6 +27,7 @@ FLAGS = tf.app.flags.FLAGS
 tf.app.flags.DEFINE_string('dataset', 'KITTI',
                            """Currently only support KITTI dataset.""")
 tf.app.flags.DEFINE_string('data_path', '', """Root directory of data""")
+tf.app.flags.DEFINE_string('data_splits_path', '', """Root directory of data""")
 tf.app.flags.DEFINE_string('image_set', 'train',
                            """ Can be train, trainval, val, or test""")
 tf.app.flags.DEFINE_string('train_dir', '/tmp/bichen/logs/squeezeseg/train',
@@ -62,7 +63,7 @@ def train():
       mc.PRETRAINED_MODEL_PATH = FLAGS.pretrained_model_path
       model = SqueezeSeg(mc)
 
-    imdb = kitti(FLAGS.image_set, FLAGS.data_path, mc)
+    imdb = kitti(FLAGS.image_set, FLAGS.data_splits_path, FLAGS.data_path, mc)
 
     # save model size, flops, activations by layers
     with open(os.path.join(FLAGS.train_dir, 'model_metrics.txt'), 'w') as f:
@@ -125,7 +126,7 @@ def train():
       eqth.start()
       enq_threads.append(eqth)
 
-    run_options = tf.RunOptions(timeout_in_ms=60000)
+    run_options = tf.RunOptions(timeout_in_ms=600000)
 
     try:
       for step in xrange(FLAGS.max_steps):

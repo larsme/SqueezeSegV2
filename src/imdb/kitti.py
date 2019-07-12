@@ -9,14 +9,14 @@ import subprocess
 from imdb import imdb
 
 class kitti(imdb):
-  def __init__(self, image_set, data_path, mc):
+  def __init__(self, image_set, data_splits_path, data_path, mc):
     imdb.__init__(self, 'kitti_'+image_set, mc)
     self._image_set = image_set
-    self._data_root_path = data_path
-    self._lidar_2d_path = os.path.join(self._data_root_path, 'lidar_2d')
+    self._data_splits_path = data_splits_path
+    self._lidar_2d_path = os.path.join(data_path, 'lidar_2d')
 
     # a list of string indices of images in the directory
-    self._image_idx = self._load_image_set_idx() 
+    self._image_idx = self._load_image_set_idx()
     # a dict of image_idx -> [[cx, cy, w, h, cls_idx]]. x,y,w,h are not divided by
     # the image width and height
 
@@ -28,7 +28,7 @@ class kitti(imdb):
 
   def _load_image_set_idx(self):
     image_set_file = os.path.join(
-        self._data_root_path, 'ImageSet', self._image_set+'.txt')
+        self._data_splits_path, 'ImageSet', self._image_set+'.txt')
     assert os.path.exists(image_set_file), \
         'File does not exist: {}'.format(image_set_file)
 

@@ -63,7 +63,8 @@ logdir="$LOG_DIR/"
 python ./src/train.py \
   --dataset=KITTI \
   --pretrained_model_path=./data/SqueezeNet/squeezenet_v1.1.pkl \
-  --data_path=./data/ \
+  --data_splits_path=./data \
+  --data_path=../../data \
   --image_set=$IMAGE_SET \
   --train_dir="$logdir/train" \
   --net=$NET \
