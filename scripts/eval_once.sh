@@ -5,6 +5,8 @@ export NET="squeezeSeg"
 export IMAGE_SET="val"
 export LOG_DIR="./log"
 export CHECKPOINT_NUM="49999"
+export TRAIN_DIR="$LOG_DIR/train"
+export CHECKPOINT_PATH="$TRAIN_DIR/model.ckpt-$CHECKPOINT_NUM"
 
 if [ $# -eq 0 ]
 then
@@ -16,6 +18,7 @@ then
   echo "-image_set                (train|val)"
   echo "-log_dir                  Where to load models and save logs."
   echo "-checkpoint_num           Which checkpoint to evaluate."
+  echo "-checkpoint_path          Which checkpoint to evaluate."
   exit 0
 fi
 
@@ -30,6 +33,7 @@ while test $# -gt 0; do
       echo "-image_set                (train|val)"
       echo "-log_dir                  Where to load models and save logs."
       echo "-checkpoint_num           Which checkpoint to evaluate."
+      echo "-checkpoint_path          Which checkpoint to evaluate."
       exit 0
       ;;
     -gpu)
@@ -49,6 +53,12 @@ while test $# -gt 0; do
       ;;
     -checkpoint_num)
       export CHECKPOINT_NUM="$2"
+      export CHECKPOINT_PATH="$TRAIN_DIR/model.ckpt-$CHECKPOINT_NUM"
+      shift
+      shift
+      ;;
+    -checkpoint_path)
+      export CHECKPOINT_PATH="$2"
       shift
       shift
       ;;
@@ -58,8 +68,6 @@ while test $# -gt 0; do
   esac
 done
 
-logdir="$LOG_DIR"
-traindir="$logdir/train"
 valdir="$logdir/eval_$IMAGE_SET"
 
 python ./src/eval.py \
@@ -69,7 +77,7 @@ python ./src/eval.py \
   --image_set=$IMAGE_SET \
   --eval_dir="$valdir" \
   --run_once="True" \
-  --checkpoint_path="$traindir/model.ckpt-$CHECKPOINT_NUM" \
+  --checkpoint_path="$CHECKPOINT_PATH" \
   --net=$NET \
   --gpu=$GPUID
 
