@@ -4,7 +4,8 @@ export GPUID=0
 export NET="squeezeSeg"
 export IMAGE_SET="train"
 export LOG_DIR="./log/"
-export STEPS=50000
+#export STEPS=50000
+export STEPS=134283
 
 if [ $# -eq 0 ]
 then
@@ -58,11 +59,12 @@ while test $# -gt 0; do
   esac
 done
 
-logdir="$LOG_DIR/"
+
+
+logdir="./logs/not_pretrained/log"
 
 python ./src/train.py \
   --dataset=KITTI \
-  --pretrained_model_path=./data/SqueezeNet/squeezenet_v1.1.pkl \
   --data_splits_path=./data \
   --data_path=../../data \
   --image_set=$IMAGE_SET \
@@ -70,5 +72,5 @@ python ./src/train.py \
   --net=$NET \
   --max_steps=$STEPS \
   --summary_step=100 \
-  --checkpoint_step=100 \
+  --checkpoint_step=1000 \
   --gpu=$GPUID

@@ -124,6 +124,17 @@ def eval_once(
     pr = tp_sum.astype(np.float)/(tp_sum + fp_sum + mc.DENOM_EPSILON)
     re = tp_sum.astype(np.float)/(tp_sum + fn_sum + mc.DENOM_EPSILON)
 
+    ious_any = np.sum(tp_sum[range(1, mc.NUM_CLASS)]).astype(np.float)/(np.sum(tp_sum[range(1, mc.NUM_CLASS)] +
+                                                                               fn_sum[range(1, mc.NUM_CLASS)] +
+                                                                               fp_sum[range(1, mc.NUM_CLASS)]) +
+                                                                        mc.DENOM_EPSILON)
+    pr_any = np.sum(tp_sum[range(1, mc.NUM_CLASS)]).astype(np.float)/(np.sum(tp_sum[range(1, mc.NUM_CLASS)] +
+                                                                             fp_sum[range(1, mc.NUM_CLASS)]) +
+                                                                      mc.DENOM_EPSILON)
+    re_any = np.sum(tp_sum[range(1, mc.NUM_CLASS)]).astype(np.float)/(np.sum(tp_sum[range(1, mc.NUM_CLASS)] +
+                                                                             fn_sum[range(1, mc.NUM_CLASS)]) +
+                                                                      mc.DENOM_EPSILON)
+
     print ('Evaluation summary:')
     print ('  Timing:')
     print ('    read: {:.3f}s detect: {:.3f}s'.format(
@@ -139,14 +150,19 @@ def eval_once(
     print ('  Accuracy:')
     for i in range(1, mc.NUM_CLASS):
       print ('    {}:'.format(mc.CLASSES[i]))
-      print ('\tPixel-seg: P: {:.3f}, R: {:.3f}, IoU: {:.3f}'.format(
-          pr[i], re[i], ious[i]))
+      print ('\tPixel-seg: IoU: {:.5f}, P: {:.5f}, R: {:.5f}'.format(
+          ious[i], pr[i], re[i]))
       eval_sum_feed_dict[
           eval_summary_phs['Pixel_seg_accuracy/'+mc.CLASSES[i]+'_iou']] = ious[i]
       eval_sum_feed_dict[
           eval_summary_phs['Pixel_seg_accuracy/'+mc.CLASSES[i]+'_precision']] = pr[i]
       eval_sum_feed_dict[
           eval_summary_phs['Pixel_seg_accuracy/'+mc.CLASSES[i]+'_recall']] = re[i]
+
+    print ('Mean Pixel-seg: IoU: {:.5f}, P: {:.5f}, R: {:.5f}'.format(
+      np.mean(ious), np.mean(pr), np.mean(re)))
+    print ('Any Class Pixel-seg: IoU: {:.5f}, P: {:.5f}, R: {:.5f},'.format(
+      ious_any, pr_any, re_any))
 
     eval_summary_str = sess.run(eval_summary_ops, feed_dict=eval_sum_feed_dict)
     for sum_str in eval_summary_str:
